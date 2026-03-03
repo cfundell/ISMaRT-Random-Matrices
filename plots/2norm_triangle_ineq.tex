@@ -1,0 +1,41 @@
+\documentclass[12pt]{report}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{empheq}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{parskip}
+
+\pagestyle{empty}
+\newcommand\w[1]{\makebox[1.305em]{$#1$}}
+
+\begin{document}
+\thispagestyle{empty}
+
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l c r}
+  & \textbf{Scratch} \\
+\end{tabular*}
+
+NTS: $\sqrt{\frac{1}{n}\sum |a+b|^2}\leq \sqrt{\frac{1}{n}\sum|a|^2}+\sqrt{\frac{1}{n}\sum |b|^2}$. STS: $\sqrt{\sum |a+b|^2}\leq \sqrt{\sum|a|^2}+\sqrt{\sum |b|^2}$.
+
+Equivalently, since we're working with absolute values and thus all values are positive, STS: 
+
+$\sum |a+b|^2\leq (\sqrt{\sum|a|^2}+\sqrt{\sum |b|^2})^2$.
+
+\[\sum_{i,j\leq n}|a_{ij}+b_{ij}|^2=\sum_{i,j\leq n}|a_{ij}^2+2a_{ij}b_{ij}+b_{ij}^2|\]
+
+\[(\sqrt{\sum|a|^2}+\sqrt{\sum |b|^2})^2=\sum_{i,j\leq n}|a_{ij}|^2+ 2\sqrt{\sum _{i,j\leq n}|a_{ij}|^2\sum _{i,j\leq n}|b_{ij}|^2}+\sum_{i,j\leq n} |b_{ij}|^2\]
+
+\[\sum_{i,j\leq n}|a_{ij}^2+b_{ij}^2|\leq \sum_{i,j\leq n}|a_{ij}|^2+\sum_{i,j\leq n} |b_{ij}|^2\]
+
+NTS:
+
+\[\sum _{i,j\leq n}|a_{ij}b_{ij}|\leq \sqrt{\sum _{i,j\leq n}|a_{ij}|^2\sum _{i,j\leq n}|b_{ij}|^2}\]
+
+Equivalently:
+
+\[(\sum _{i,j\leq n}|a_{ij}b_{ij}|)^2\leq \sum _{i,j\leq n}|a_{ij}|^2\sum _{i,j\leq n}|b_{ij}|^2\]
+
+This is true by Callebaut's inequality(special case of Cauchy-Schwartz Inequality).
+
+\end{document}
