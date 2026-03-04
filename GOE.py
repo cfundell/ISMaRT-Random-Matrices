@@ -18,16 +18,6 @@ def generate_GOE(N):
                     H[j][i] = rand_num
     return H
 
-# Generate Ginibre ensemble with x_ij ~ N(0, 1)
-def generate_Ginibre(N):
-    H = [[0 for col in range(N)] for row in range(N)]
-
-    for i in range(N):
-        for j in range(N):
-            rand_num = rng.normal(0.0, 1.0)
-            H[i][j] = rand_num
-    return H
-
 # Assumes symmetric matrix
 # H is a GOE of size N
 # If print_results = True, prints the mean and variance of the diagonal and off-diagonal elements to the terminal
@@ -64,17 +54,15 @@ def calculate_mean_and_var(H, N, print_results):
 # plot_results = true: Plots histograms of the eigenvalues and eigenvalue spacings. Also plots a selected range of eigenvalues to visualize their spacings
 def calculate_eigval_spacing(H, N, print_results, plot_results):
     eigenvalues = np.linalg.eigvals(H)
-    # sort eigenvalues from largest to smallest
     eigenvalues = -np.sort(-eigenvalues)
 
     spacings = []
     total_spacing = 0.0
 
-    ## Real eigenvalues
-    # for val in range(N-1):
-    #     spacing = eigenvalues[val] - eigenvalues[val + 1]
-    #     spacings.append(float(spacing))
-    #     total_spacing += spacing
+    for val in range(N-1):
+        spacing = eigenvalues[val] - eigenvalues[val + 1]
+        spacings.append(float(spacing))
+        total_spacing += spacing
 
     average_spacing = total_spacing/N
     spacing_std = np.sqrt(np.var(spacings))
@@ -84,89 +72,57 @@ def calculate_eigval_spacing(H, N, print_results, plot_results):
         print(f"Standard deviation of eigenvalue spacing: {spacing_std}")
 
     if plot_results:
-        # Create scatter plot of eigenvalues
-        reals = eigenvalues.real
-        imaginaries = eigenvalues.imag
-
-        plt.plot(reals, imaginaries, linestyle="none", color='blue', marker='o', markersize=1)
-        plt.xlabel('Real Axis')
-        plt.ylabel('Imaginary Axis')
-        plt.title(f'Eigenvalues of Ginibre ensemble with N = {N}')
-
-        #Ensure equal aspect ratio for a proper representation of the complex plane
-        plt.gca().set_aspect('equal', adjustable='box')
-        plt.grid(True, linestyle='--', alpha=0.6)
-
-        plt.savefig("Gini_eigvals.png", dpi=300, bbox_inches='tight')
-        plt.close()
-
         # Create the histogram probability density for eigenvalues
         plt.hist(
-            reals,
-            bins=25,
-            range=(-reals[0], reals[0]),
+            eigenvalues,
+            bins=50,
+            range=(-eigenvalues[0], eigenvalues[0]),
             density=True,        # y-axis becomes probability density
             edgecolor="black",   # draw lines around bins
             linewidth=0.5,
             label="Eigenvalue histogram",
             color="#ff9100")
-        plt.xlabel("Re(lambda)")
-        plt.ylabel("Probability density of Re(lambda)")
-        plt.title(f"Real part histogram for Ginibre ensemble with N = {N}")
-        plt.savefig("Gini_eigval_hist_reals.png", dpi=300, bbox_inches='tight')
+        plt.xlabel("lambda")
+        plt.ylabel("Probability density of lambda")
+        plt.title(f"Eigenvalue histogram for GOE with N = {N}")
+        plt.savefig("eigval_hist.png", dpi=300, bbox_inches='tight')
         plt.close()
 
-        # Create the histogram probability density for eigenvalues
+        # Create histogram probability density for eigenvalue spacings
         plt.hist(
-            imaginaries,
+            spacings,
             bins=25,
-            range=(-reals[0], reals[0]),
+            range=(0, 0.3),
             density=True,        # y-axis becomes probability density
             edgecolor="black",   # draw lines around bins
             linewidth=0.5,
             label="Eigenvalue histogram",
             color="#ff9100")
-        plt.xlabel("Im(lambda)")
-        plt.ylabel("Probability density of Im(lambda)")
-        plt.title(f"Imagininary part histogram for Ginibre ensemble with N = {N}")
-        plt.savefig("Gini_eigval_hist_imagi.png", dpi=300, bbox_inches='tight')
+        plt.xlabel("|lambda_k - lambda_k+1|")
+        plt.ylabel("Probability density")
+        plt.title(f"Eigenvalue spacing histogram for GOE with N = {N}")
+        plt.savefig("spacings_hist.png", dpi=300, bbox_inches='tight')
         plt.close()
-
-        # # Create histogram probability density for eigenvalue spacings
-        # plt.hist(
-        #     spacings,
-        #     bins=50,
-        #     range=(0.0, 0.3),
-        #     density=True,        # y-axis becomes probability density
-        #     edgecolor="black",   # draw lines around bins
-        #     linewidth=0.5,
-        #     label="Eigenvalue histogram",
-        #     color="#ff9100")
-        # plt.xlabel("|lambda_k - lambda_k+1|")
-        # plt.ylabel("Probability density")
-        # plt.title(f"Eigenvalue spacing histogram for GOE with N = {N}")
-        # plt.savefig("Gini_spacings_hist.png", dpi=300, bbox_inches='tight')
-        # plt.close()
 
         # Plot eigenvalues to show spacings
-        # x_range = []
-        # for i in range(25):
-        #     x_range.append(eigenvalues[50 + i])
+        x_range = []
+        for i in range(25):
+            x_range.append(eigenvalues[500 + i])
         
-        # y_range = []
-        # for x in x_range:
-        #     y_range.append(1)
+        y_range = []
+        for x in x_range:
+            y_range.append(1)
 
         # Hide tick and label marks of y axis
-        # fig, ax = plt.subplots()
-        # ax.set_yticks([]) 
-        # ax.set_yticklabels([]) 
+        fig, ax = plt.subplots()
+        ax.set_yticks([]) 
+        ax.set_yticklabels([]) 
 
-        # plt.plot(x_range, y_range, "bo", markersize=1)
-        # plt.xlabel("lambda")
-        # plt.title(f"Eigenvalue spacing histogram for GOE with N = {N} in the range {eigenvalues[50]:.2f},{eigenvalues[74]:.2f}")
-        # plt.savefig("Gini_eigval_spacing.png", dpi=300, bbox_inches='tight')
-        # plt.close()
+        plt.plot(x_range, y_range, "bo", markersize=1)
+        plt.xlabel("lambda")
+        plt.title(f"Eigenvalue spacing histogram for GOE with N = {N} in the range {eigenvalues[500]:.2f},{eigenvalues[524]:.2f}")
+        plt.savefig("eigvals.png", dpi=300, bbox_inches='tight')
+        plt.close()
         
     return average_spacing, spacings, eigenvalues
 
@@ -176,6 +132,6 @@ rng = np.random.default_rng()
 
 # Test
 N = 1000
-H = generate_Ginibre(N)
+H = generate_GOE(N)
 
 calculate_eigval_spacing(H, N, False, True)
