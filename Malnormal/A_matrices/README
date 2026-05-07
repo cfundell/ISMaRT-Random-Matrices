@@ -1,0 +1,5 @@
+The two folders located here contain explicit A matrices for n=2,3,4, calculated using the algorithms found in either of the Conj_*.m files. 
+
+theta_pi contains matrices where theta uniformly ranges from 0 to pi.
+
+theta_2pi contains matrices where theta uniformly ranges from 0 to 2pi.
