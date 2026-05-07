@@ -2,15 +2,25 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Generate Ginibre ensemble with x_ij ~ N(0, 1)
+# Generate complex Ginibre ensemble with x_ij ~ N(0, 1)
 def generate_Ginibre(N):
     A = [[0 for col in range(N)] for row in range(N)]
 
     for i in range(N):
         for j in range(N):
-            rand_num = rng.normal(0.0, 1.0)
-            A[i][j] = rand_num
+            rand_num1 = rng.normal(0.0, 1.0)
+            rand_num2 = 1j * rng.normal(0.0, 1.0)
+            A[i][j] = rand_num1 + rand_num2
     return A
+
+def generate_Haar(N):
+    G = generate_Ginibre(N)
+
+    Q, R = np.linalg.qr(G)
+
+    Gamma = np.diag(R) / np.abs(np.diag(R)) 
+
+    return Q @ Gamma
 
 # Calculates eigenvalues for Ginibre ensemble of size N. Returns array of eigenvalues.
 # If plot_results is True, plots the eigenvalues as a scatterplot in the complex plane
@@ -76,7 +86,7 @@ def calculate_eigvals(A, N, plot_results):
 rng = np.random.default_rng()
 
 # Test
-N = 100
+N = 1000
 A = generate_Ginibre(N)
 
 calculate_eigvals(A, N, True)
